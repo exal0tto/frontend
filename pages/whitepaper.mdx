@@ -1,0 +1,153 @@
+export const meta = {
+  title: 'ExaLotto Whitepaper',
+}
+
+# Whitepaper
+
+## Table of Contents
+
+## Abstract
+
+We hereby provide the design specification of **ExaLotto**, a lottery game based on the Ethereum
+Virtual Machine (“EVM” in the following).
+
+The game will be managed as a Decentralized Autonomous Organization (“DAO” in the following).
+
+## Motivations
+
+Lottery games have ancient origins tracing back to the Chinese Han Dynasty, between years 205 and
+187 BC. The core idea of the game is that every player pays a small amount of money and a randomly
+chosen lucky winner gets the money from all contributions.
+
+Unfortunately, classic operation of such games requires a central running authority and subjects
+them to serious issues:
+
+* **Censorship**: some countries make some or all lotteries illegal.
+* **Locality**: lotteries are usually State-managed and subject to local regulations, making them
+  impossible to extend across borders and turn global.
+* **Obscure or unfair prize allocation**: in a typical lottery game a share of the jackpot is
+  assigned to every winning category, but the way these shares are calculated is almost never
+  explained and is often unfair.
+* **Outright scams**: classic operation provides little to no guarantees about the fairness of the
+  drawing process, as well as the actual value of the ticket sales. The drawn numbers may be biased
+  to favor specific players, and / or the lottery operator may advertise a jackpot that is
+  significantly lower (but still attractive enough) than the ticket sales. It is certainly
+  suspicious that many lotteries constantly advertise perfectly round-numbered jackpots like $1M.
+
+Case in point, [Hot Lotto][hot-lotto] suffered one of the most famous lottery fraud scandals (not
+necessarily the worst). Other known frauds include a [Serbian lottery announcing the numbers before
+they were drawn][serbian-lottery] and [Chinese lottery operators reportedly stealing jackpot
+money][chinese-lottery]. Other frauds that might have occurred may never be uncovered.
+
+We want to overcome all the above problems by implementing a new lottery game based on a
+decentralized, trustless, censorship-resistant, and cryptographically verified platform: the EVM.
+
+## Game Description
+
+For scalability reasons the game will run on the [Polygon PoS blockchain][polygon], which is
+compatible with Ethereum and can run Solidity programs with little to no modifications.
+
+Players join the game by buying one or more tickets. When buying a ticket, a player chooses 6 or
+more different numbers between 1 and 90 inclusive.
+
+6 different random numbers in the same range are drawn once a week by the system, and all tickets
+matching two or more of the drawn numbers are awarded a prize.
+
+The jackpot money is managed by an Ethereum smartcontract at all times, and is kept in MATIC which
+is the native currency of the Polygon PoS blockchain.
+
+The ticket sales are also entirely managed by the smartcontract. A 6-number ticket has a small fixed
+price that is the Ether equivalent of 1.50 US dollars, recalculated at the beginning of each round
+based on the latest Ether market price.
+
+// TODO
+
+## DAO Management and Referral Program
+
+ExaLotto is a decentralized lottery game managed by a DAO. Voting power is proportional to an
+[ERC20][erc20] token with trading symbol `EXL`.
+
+// TODO
+
+## Prize allocation
+
+As described in [DAO Management](#dao-management), 20% of the revenue from ticket sales is
+distributed among partners; the remaining 80% is used to fund the prizes.
+
+ExaLotto maintains 5 independent prizes for the 5 winning categories: one for the tickets with 2
+matches, one for the tickets with 3 matches, etc. The prize for the tickets with 6 matches is also
+known as the _jackpot_.
+
+At round closure, immediately after the 6 winning numbers are drawn, the number of winners in each
+category is calculated. If a given category has one or more winners the respective prize is spent,
+meaning that it becomes available to the winners for withdrawal; otherwise the prize is carried over
+to the next round.
+
+In addition to the 5 prizes, ExaLotto keeps an extra stash that is used to fund the jackpot in case
+one or more tickets match all 6 numbers; that way the jackpot is never zero.
+
+The 80% value of the ticket sale revenue is allocated as follows: 18.8% is used for the prize of
+each category and the remaining 6% is used for the stash.
+
+All 5 winning categories are allocated the same fraction of the ticket sale revenue because we found
+this to be the fairest possible allocation. In fact, in order to award the fairest possible prizes,
+the share of a given category must be inversely proportional to the probability of winning and
+directly proportional to the [expected][expectation] number of winners. In other words:
+
+* it is fair to allocate a larger share for the winners of a **higher** category because they have a
+  **lower** probability of winning; and
+* it is fair to allocate a larger share for the winners of a **lower** category because we expect a
+  **higher** number of winners.
+
+So we have two conflicting criteria that balance each other out, as we show formally in the
+following.
+
+For a given category $k$ we can call the probability of winning in that category $p_k$, and the
+expected number of winners $\xi_k$. We can use $n$ to indicate the total number of played
+6-combinations in a round. $\xi_k$ is a [binomial variable][binomial-variable], so its expected
+value is $np_k$. Based on the two proportionality criteria above, the share of the revenue allocated
+to the prize for category $k$ can be measured as:
+
+$$
+S_k = \frac{E(\xi_k)}{p_k} = \frac{np_k}{p_k} = n
+$$
+
+This measure does not depend on $p_k$ or any other $k$-dependent parameter, so **all shares must
+have the same size**. This is unlike most other lotteries, which allocate seemingly arbitrary or
+inadequately explained shares of the revenue to the various categories.
+
+## Lottery Smartcontract
+
+// TODO
+
+```sol
+contract Test {
+  uint private _foo = 42;
+
+  function test() public view returns (uint) {
+    return _foo;
+  }
+}
+```
+
+// TODO
+
+## Governance
+
+The implementation of the `EXL` token extends OpenZeppelin's [`ERC20Votes`][erc20-votes].
+
+// TODO
+
+[binomial-variable]: https://en.wikipedia.org/wiki/Binomial_distribution
+[chinese-lottery]: https://www.nikkei.com/article/DGKKASGM08H2T_Z20C15A7EAF000/
+[erc20]: https://ethereum.org/en/developers/docs/standards/tokens/erc-20/
+[erc20-votes]: https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC20Votes
+[expectation]: https://en.wikipedia.org/wiki/Expected_value
+[hot-lotto]: https://en.wikipedia.org/wiki/Hot_Lotto_fraud_scandal
+[polygon]: https://polygon.technology/polygon-pos
+[serbian-lottery]: https://www.independent.co.uk/news/world/europe/serbian-lottery-probe-after-winning-number-called-before-its-drawn-10430922.html
+
+
+import {Article} from '@/components/Article'
+
+export default ({children}) => <Article meta={meta}>{children}</Article>
