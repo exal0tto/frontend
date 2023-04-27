@@ -59,7 +59,7 @@ const JackpotConversion = ({jackpot}) => {
         <div className="jackpot__currency-selected">{converted}</div>
       </div>
       <div className="jackpot__currency-descr">
-        *based on <span>current MATIC market price</span>
+        *based on <span>current {process.env.NEXT_PUBLIC_CURRENCY_NAME} market price</span>
       </div>
     </div>
   );
@@ -178,7 +178,7 @@ const JackpotInner = ({lottery}) => {
         </div>
         <div className="jackpot__main">
           <div className="jackpot__top-win">
-            {(jackpot !== null) && `${Math.floor(jackpot * 100) / 100}`} MATIC
+            {(jackpot !== null) && `${Math.floor(jackpot * 100) / 100}`} {process.env.NEXT_PUBLIC_CURRENCY_NAME}
           </div>
           {(jackpot !== null) && (<JackpotConversion jackpot={jackpot}/>)}
           <NextDraw lottery={lottery}/>

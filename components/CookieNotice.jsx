@@ -35,7 +35,7 @@ export const CookieNotice = () => {
       fontWeight: 600,
     }}>
       This website uses cookies to improve the navigation experience. Please read
-      our <Link href="/legal">privacy policy</Link>. <button onClick={() => {
+      our <Link href="/legal.html">privacy policy</Link>. <button onClick={() => {
         setCookie(PRIVACY_POLICY_ACCEPTANCE_COOKIE, true, PRIVACY_POLICY_ACCEPTANCE_OPTIONS);
         setShow(false);
       }}>Accept</button>

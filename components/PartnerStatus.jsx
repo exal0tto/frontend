@@ -37,7 +37,7 @@ const DynamicStatus = ({context: {account, library: web3}, token, controller}) =
         <p>Your <code>EXL</code> balance is: {formatBigNumber(web3, balance)}</p>
       ) : null}
       {(unclaimed && unclaimed.cmp(web3.utils.toBN(0))) ? (
-        <p>You have unclaimed fees: {formatBigNumber(web3, unclaimed)} ETH &#8211; <button onClick={async () => {
+        <p>You have unclaimed fees: {formatBigNumber(web3, unclaimed)} {process.env.NEXT_PUBLIC_CURRENCY_NAME} &#8211; <button onClick={async () => {
           await controller.methods.withdraw(account).send({from: account});
         }}>withdraw</button></p>
       ) : null}

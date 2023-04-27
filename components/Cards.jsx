@@ -32,7 +32,7 @@ Card.Jackpot = ({jackpot}) => (
       <div className="draws__jackpot-title">Jackpot</div>
       <div className="draws__jackpot-container">
         <div className="draws__jackpot-number">
-          {Math.floor(jackpot * 100) / 100} ETH
+          {Math.floor(jackpot * 100) / 100} {process.env.NEXT_PUBLIC_CURRENCY_NAME}
         </div>
       </div>
     </div>

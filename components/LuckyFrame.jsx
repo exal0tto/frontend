@@ -128,7 +128,7 @@ const NumberStats = ({lottery, numbers}) => {
         </div>
       </div>
       <div className="lucky-statistic__cost">
-        <div className="lucky-statistic__title">Price (MATIC)</div>
+        <div className="lucky-statistic__title">Price ({process.env.NEXT_PUBLIC_CURRENCY_NAME})</div>
         <div className="lucky-statistic__subtitle">{price}</div>
       </div>
     </div>
