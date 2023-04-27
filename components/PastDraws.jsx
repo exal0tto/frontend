@@ -19,7 +19,7 @@ export const PastDraws = ({lottery}) => (
         </p>
         <p className="past-draws__descr">
           To win the game a player must predict at least 2 of 6 numbers that will be drawn every
-          week (<Link href="/howtoplay.html">read more</Link>).
+          week (<Link href="/howtoplay">read more</Link>).
         </p>
         <p className="past-draws__descr">
           ExaLotto is the safest and most rewarding lottery ever created, and it will last forever.

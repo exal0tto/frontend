@@ -59,7 +59,7 @@ const JackpotConversion = ({jackpot}) => {
         <div className="jackpot__currency-selected">{converted}</div>
       </div>
       <div className="jackpot__currency-descr">
-        *based on <span>current {process.env.NEXT_PUBLIC_CURRENCY_NAME} market price</span>
+        *based on <a href="https://coinmarketcap.com/currencies/polygon/" target="_blank" rel="noreferrer">current {process.env.NEXT_PUBLIC_CURRENCY_NAME} market price</a>
       </div>
     </div>
   );
@@ -178,7 +178,7 @@ const JackpotInner = ({lottery}) => {
         </div>
         <div className="jackpot__main">
           <div className="jackpot__top-win">
-            {(jackpot !== null) && `${Math.floor(jackpot * 100) / 100}`} {process.env.NEXT_PUBLIC_CURRENCY_NAME}
+            {(jackpot !== null) && `${Math.floor(jackpot * 100) / 100}`} <span className="jackpot__top-win__currency">{process.env.NEXT_PUBLIC_CURRENCY_NAME}</span>
           </div>
           {(jackpot !== null) && (<JackpotConversion jackpot={jackpot}/>)}
           <NextDraw lottery={lottery}/>

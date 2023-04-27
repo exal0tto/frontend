@@ -13,31 +13,31 @@ const navigationMenuItems = [
     visible: 'always',
   }, {
     caption: 'How to Play',
-    target: '/howtoplay.html',
+    target: '/howtoplay',
     visible: 'always',
   }, {
     caption: 'My Tickets',
-    target: '/tickets.html',
+    target: '/tickets',
     visible: 'account',
   }, {
     caption: 'Odds',
-    target: '/odds.html',
+    target: '/odds',
     visible: 'always',
   }, {
     caption: 'Whitepaper',
-    target: '/whitepaper.html',
+    target: '/whitepaper',
     visible: 'always',
   }, {
     caption: 'ICO',
-    target: '/ico.html',
+    target: '/ico',
     visible: 'never',
   }, {
     caption: 'Partners',
-    target: '/partners.html',
+    target: '/partners',
     visible: 'always',
   }, {
     caption: 'ToS & PP',
-    target: '/legal.html',
+    target: '/legal',
     visible: 'never',
   },
 ];

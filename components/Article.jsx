@@ -21,6 +21,30 @@ const components = {
       );
     }
   },
+  table: ({children, style = {}, ...props}) => {
+    style.border = '1px solid black';
+    return (
+      <table style={style} {...props}>{children}</table>
+    );
+  },
+  th: ({children, style = {}, ...props}) => {
+    style.border = '1px solid black';
+    style.paddingLeft = '1em';
+    style.paddingRight = '1em';
+    style.textAlign = 'center';
+    return (
+      <th style={style} {...props}>{children}</th>
+    );
+  },
+  td: ({children, style = {}, ...props}) => {
+    style.border = '1px solid black';
+    style.paddingLeft = '1em';
+    style.paddingRight = '1em';
+    style.textAlign = 'center';
+    return (
+      <td style={style} {...props}>{children}</td>
+    );
+  },
 };
 
 
