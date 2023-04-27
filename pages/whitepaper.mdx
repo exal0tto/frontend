@@ -237,11 +237,20 @@ $$
 H = P_{a_1} \cdot P_{a_2} \cdot P_{a_3} \cdot P_{a_4} \cdot P_{a_5} \cdot P_{a_6}
 $$
 
-So we can index all tickets in a Solidity `mapping` whose keys are such products and whose values
-are the number of 6-combinations containing those numbers.
+Storing these numbers is not a problem thanks to the 256-bit integers used by Solidity. For a
+20-number ticket, which has a hefty base cost of $58,140 as per the [price table
+above](#game-description), we have:
 
-Then, at draw time, the number of 6-combinations with 6 matches is readily available in storage at
-the slot of the `mapping` corresponding to:
+$$
+20 \cdot log_2(463) \approx 177.097
+$$
+
+So the product for such a ticket will take less than 177 bits.
+
+We can now index all tickets in a Solidity `mapping` whose keys are such products and whose values
+are the number of 6-combinations containing those numbers. Then, at draw time, the number of
+6-combinations with 6 matches is readily available in storage at the slot of the `mapping`
+corresponding to:
 
 $$
 H_6 = P_{d_1} \cdot P_{d_2} \cdot P_{d_3} \cdot P_{d_4} \cdot P_{d_5} \cdot P_{d_6}
@@ -272,11 +281,11 @@ $20000 \cdot 57 = 1140000$ gas units. With a pessimistic gas cost of 500 Gwei th
 ~1.50 MATIC ticket value for a total of **2.07 MATIC for a 6-number ticket**, which we deem
 acceptable.
 
-Note that the gas cost greatly improves if two or more numbers have already been played. In the
-best-case scenario where all 6 numbers have already been played in the current round, each of the 57
-slots is updated from non-zero to non-zero and only costs 2900 gas units. That results in a fee of
-165,300 gas units or 0.08265 MATIC (under the same assumption of a 500 Gwei gas cost), leaving the
-original $1.50 price almost unaltered.
+Note that the gas cost greatly improves if two or more numbers have already been played in the
+current round. In the best-case scenario where all 6 numbers have already been played, each of the
+57 slots is updated from non-zero to non-zero and only costs 2900 gas units. That results in a fee
+of 165,300 gas units or 0.08265 MATIC (under the same assumption of a 500 Gwei gas cost), leaving
+the original $1.50 price almost unaltered.
 
 // TODO
 
