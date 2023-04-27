@@ -66,7 +66,7 @@ every possible regard treated as if the player bought all possible 6-combination
 from the numbers. For example, a ticket with 8 numbers is equivalent to ${8 \choose 6} = 28$
 different 6-number tickets, and in general a ticket with $k$ numbers (with $k \ge 6$) is equivalent
 to ${k \choose 6}$ different 6-number tickets, with ${k \choose 6}$ being the [binomial
-coefficient][binomial-coefficient] _"k choose 6"_, representing the number of ways to choose 6
+coefficient][binomial-coefficient] _"k choose 6"_ representing the number of ways to choose 6
 elements from a set of $k$.
 
 The binomial coefficient formula is used to calculate the price of a ticket with $k$ numbers given
@@ -191,6 +191,6 @@ The implementation of the `EXL` token extends OpenZeppelin's [`ERC20Votes`][erc2
 [serbian-lottery]: https://www.independent.co.uk/news/world/europe/serbian-lottery-probe-after-winning-number-called-before-its-drawn-10430922.html
 
 
-import {Article} from '@/components/Article'
+import {Whitepaper} from '@/components/Article'
 
-export default ({children}) => <Article meta={meta}>{children}</Article>
+export default ({children}) => <Whitepaper meta={meta}>{children}</Whitepaper>

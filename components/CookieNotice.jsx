@@ -29,7 +29,7 @@ export const CookieNotice = () => {
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      backgroundColor: 'rgba(0.03, 0.03, 0.03, 0.7)',
       textAlign: 'right',
       color: 'white',
       fontWeight: 600,

@@ -21,30 +21,9 @@ const components = {
       );
     }
   },
-  table: ({children, style = {}, ...props}) => {
-    style.border = '1px solid black';
-    return (
-      <table style={style} {...props}>{children}</table>
-    );
-  },
-  th: ({children, style = {}, ...props}) => {
-    style.border = '1px solid black';
-    style.paddingLeft = '1em';
-    style.paddingRight = '1em';
-    style.textAlign = 'center';
-    return (
-      <th style={style} {...props}>{children}</th>
-    );
-  },
-  td: ({children, style = {}, ...props}) => {
-    style.border = '1px solid black';
-    style.paddingLeft = '1em';
-    style.paddingRight = '1em';
-    style.textAlign = 'center';
-    return (
-      <td style={style} {...props}>{children}</td>
-    );
-  },
+  table: ({children, className = '', ...props}) => (
+    <table className={className + ' data-table'} {...props}>{children}</table>
+  ),
 };
 
 
@@ -59,6 +38,25 @@ export const Article = ({meta: {date}, children}) => (
           </aside>
           <MDXProvider components={components}>
             <article className="article__body text">{children}</article>
+          </MDXProvider>
+        </div>
+      </Container>
+    </section>
+  </MainBody>
+);
+
+
+export const Whitepaper = ({meta: {date}, children}) => (
+  <MainBody>
+    <ArticleHeader/>
+    <section className="whitepaper">
+      <Container>
+        <div className="whitepaper__wrap d-flex justify-content-start align-items-start flex-column flex-lg-row">
+          <aside className="whitepaper__sidebar">
+            <div className="whitepaper__date">{date}</div>
+          </aside>
+          <MDXProvider components={components}>
+            <article className="whitepaper__body whitepaper-text">{children}</article>
           </MDXProvider>
         </div>
       </Container>
