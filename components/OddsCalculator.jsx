@@ -24,7 +24,7 @@ export const OddsCalculator = () => {
     return Math.round(inverse * 100) / 100;
   };
   return (
-    <section className="blog odds">
+    <section className="odds">
       <Container>
         <SectionTitle title="Odds Calculator"/>
         <div className="probability">

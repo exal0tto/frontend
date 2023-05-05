@@ -1,3 +1,7 @@
+.odds {
+    padding: 60px 0 30px;
+}
+
 .probability {
     &__header {
         display: flex;
@@ -163,7 +167,15 @@
         }
     }
 }
+@include media-breakpoint-up(xl) {
+    .odds {
+        padding: 156px 0 30px;
+    }
+}
 @include media-breakpoint-up(xxl) {
+    .odds {
+        padding: 143px 0 30px;
+    }
     .probability {
         &__top {
             &:before {
