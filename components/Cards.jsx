@@ -1,6 +1,10 @@
+import Web3 from 'web3';
+
+
 function formatNumber(value) {
   return ('0' + value).slice(-2);
 }
+
 
 const Card = ({date, children, onDetails}) => (
   <div className="draws__item">
@@ -32,7 +36,7 @@ Card.Jackpot = ({jackpot}) => (
       <div className="draws__jackpot-title">Jackpot</div>
       <div className="draws__jackpot-container">
         <div className="draws__jackpot-number">
-          {Math.floor(jackpot * 100) / 100} {process.env.NEXT_PUBLIC_CURRENCY_NAME}
+          {Math.floor(parseFloat(Web3.utils.fromWei(jackpot)) * 100) / 100} {process.env.NEXT_PUBLIC_CURRENCY_NAME}
         </div>
       </div>
     </div>

@@ -34,9 +34,18 @@ export interface Receipt {
 export interface Draw {
   date: Date;
   round: number;
-  jackpot: number;
-  numbers: number[];
-  winners: number[][];
+  drawBlock: number;
+  closureBlock: number;
+  prizes: string[5];
+  stash: string;
+  numbers: number[6];
+  totalCombinations: number;
+  winners: number[5];
+}
+
+export interface DrawExtended extends Draw {
+  drawTxHash: string;
+  closureTxHash: string;
 }
 
 export interface Ticket {
@@ -144,14 +153,33 @@ export class Lottery {
     } = await this._contract.methods.getTicket(id).call();
     const parsedRound = parseInt(round, 10);
     const currentRound = await this.getCurrentRound();
+    const draw = parsedRound < currentRound ? await this.getDrawData(parsedRound) : null;
     return {
-      id,
+      id: id,
       date: new Date(parseInt(timestamp, 10) * 1000),
       round: parsedRound,
-      draw: null,
-      player,
+      draw: draw,
+      player: player,
       numbers: numbers.map(number => parseInt(number, 10)),
     };
+  }
+
+  private static _sanitizeRoundNumber(currentRound: number, round?: number): number {
+    if (!round && round !== 0) {
+      round = currentRound;
+    }
+    if (round < 0) {
+      round = currentRound + round;
+    }
+    if (round < 0) {
+      throw new Error('invalid round number');
+    }
+    return round!;
+  }
+
+  private async sanitizeRoundNumber(round?: number): Promise<number> {
+    const currentRound = await this.getCurrentRound();
+    return Lottery._sanitizeRoundNumber(currentRound, round);
   }
 
   // TODO
@@ -159,6 +187,64 @@ export class Lottery {
   public async getTimeOfNextDraw(): Promise<Date> {
     const nextDrawTime = await this._contract.methods.getNextDrawTime().call();
     return new Date(parseInt(nextDrawTime, 10) * 1000);
+  }
+
+  public async getDrawData(round?: number): Promise<Draw> {
+    round = await this.sanitizeRoundNumber(round);
+    const {
+      prizes,
+      stash,
+      totalCombinations,
+      drawBlockNumber,
+      vrfRequestId,
+      numbers,
+      closureBlockNumber,
+      winners,
+    }: {
+      prizes: string[5],
+      stash: string,
+      totalCombinations: string,
+      drawBlockNumber: string,
+      vrfRequestId: string,
+      numbers: string[],
+      closureBlockNumber: string,
+      winners: string[5],
+    } = await this._contract.methods.getRoundData(round).call();
+    const {timestamp} = await this._web3.eth.getBlock(drawBlockNumber);
+    return {
+      date: new Date(parseInt('' + timestamp, 10) * 1000),
+      round: round,
+      drawBlock: parseInt(drawBlockNumber, 10),
+      closureBlock: parseInt(closureBlockNumber, 10),
+      prizes: prizes,
+      stash: stash,
+      numbers: numbers.map(number => parseInt(number, 10)),
+      totalCombinations: parseInt(totalCombinations, 10),
+      winners: winners.map(winners => parseInt(winners, 10)),
+    };
+  }
+
+  public async getExtendedDrawData(draw: Draw): Promise<DrawExtended> {
+    const result: DrawExtended = {...draw};
+    const [drawResults, closureResults] = await Promise.all([
+      this._contract.getPastEvents('VRFRequest', {
+        filter: {round: draw.round},
+        fromBlock: draw.drawBlock,
+        toBlock: draw.drawBlock,
+      }),
+      this._contract.getPastEvents('Draw', {
+        filter: {round: draw.round},
+        fromBlock: draw.closureBlock,
+        toBlock: draw.closureBlock,
+      }),
+    ]);
+    if (drawResults.length > 0) {
+      result.drawTxHash = drawResults[0].transactionHash;
+    }
+    if (closureResults.length > 0) {
+      result.closureTxHash = closureResults[0].transactionHash;
+    }
+    return result;
   }
 
   // TODO
