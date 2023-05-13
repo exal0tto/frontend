@@ -145,15 +145,23 @@ export class Lottery {
   }
 
   public async getTicket(id: number): Promise<Ticket> {
-    const {player, round, timestamp, numbers}: {
+    const {player, round, blockNumber, numbers}: {
       player: string,
       round: string,
-      timestamp: string,
+      blockNumber: string,
       numbers: string[],
     } = await this._contract.methods.getTicket(id).call();
     const parsedRound = parseInt(round, 10);
-    const currentRound = await this.getCurrentRound();
-    const draw = parsedRound < currentRound ? await this.getDrawData(parsedRound) : null;
+    const [draw, timestamp] = await Promise.all([
+      (async () => {
+        const currentRound = await this.getCurrentRound();
+        return parsedRound < currentRound ? await this.getDrawData(parsedRound) : null;
+      })(),
+      (async () => {
+        const {timestamp} = await this._web3.eth.getBlock(blockNumber);
+        return timestamp;
+      })(),
+    ]);
     return {
       id: id,
       date: new Date(parseInt(timestamp, 10) * 1000),
