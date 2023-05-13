@@ -36,16 +36,16 @@ export interface Draw {
   round: number;
   drawBlock: number;
   closureBlock: number;
-  prizes: string[5];
+  prizes: string[];
   stash: string;
-  numbers: number[6];
+  numbers: number[];
   totalCombinations: number;
-  winners: number[5];
+  winners: number[];
 }
 
 export interface DrawExtended extends Draw {
-  drawTxHash: string;
-  closureTxHash: string;
+  drawTxHash?: string;
+  closureTxHash?: string;
 }
 
 export interface Ticket {
@@ -164,7 +164,7 @@ export class Lottery {
     ]);
     return {
       id: id,
-      date: new Date(parseInt(timestamp, 10) * 1000),
+      date: new Date(parseInt('' + timestamp, 10) * 1000),
       round: parsedRound,
       draw: draw,
       player: player,
@@ -209,14 +209,14 @@ export class Lottery {
       closureBlockNumber,
       winners,
     }: {
-      prizes: string[5],
+      prizes: string[],
       stash: string,
       totalCombinations: string,
       drawBlockNumber: string,
       vrfRequestId: string,
       numbers: string[],
       closureBlockNumber: string,
-      winners: string[5],
+      winners: string[],
     } = await this._contract.methods.getRoundData(round).call();
     const {timestamp} = await this._web3.eth.getBlock(drawBlockNumber);
     return {
