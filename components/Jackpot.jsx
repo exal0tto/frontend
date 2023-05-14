@@ -14,6 +14,11 @@ const currencies = {
     symbol: '$',
     getPriceFeed: web3 => new USDPriceFeed(web3),
   },
+  'BTC': {
+    name: 'BTC',
+    symbol: '₿',
+    getPriceFeed: web3 => new NonUSDPriceFeed(web3, process.env.NEXT_PUBLIC_BTC_USD_PRICE_FEED),
+  },
   'EUR': {
     name: 'EUR',
     symbol: '€',
