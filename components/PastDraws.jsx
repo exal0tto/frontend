@@ -115,7 +115,7 @@ export const DrawModal = () => (
 
 const DrawCard = ({draw}) => (
   <ModalContext.Consumer>{({showModal}) => (
-    <Card date={draw.date} onDetails={() => {
+    <Card date={draw.date} onAction={() => {
       showModal('draw', draw);
     }}>
       <Card.Jackpot jackpot={draw.prizes[4]}/>

@@ -6,7 +6,18 @@ function formatNumber(value) {
 }
 
 
-const Card = ({date, children, onDetails}) => (
+function formatMoney(value) {
+  return Math.floor(parseFloat(Web3.utils.fromWei(value)) * 100) / 100;
+}
+
+
+const Card = ({
+  date,
+  children,
+  onAction = null,
+  actionTitle = 'More Details',
+  actionEnabled = true,
+}) => (
   <div className="draws__item">
     <div className="draws__frame">
       <div className="draws__date">
@@ -16,10 +27,10 @@ const Card = ({date, children, onDetails}) => (
         <div className="draws__main">
           {children}
         </div>
-        {onDetails ? (
+        {onAction ? (
           <div className="draws__buttons">
-            <button className="btn btn-details" onClick={onDetails}>
-              <span className="btn-details__text">More Details</span>
+            <button disabled={!actionEnabled} className="btn btn-details" onClick={onAction}>
+              <span className="btn-details__text">{actionTitle}</span>
               <span className="btn-details__shadow"></span>
             </button>
           </div>
@@ -36,7 +47,7 @@ Card.Jackpot = ({jackpot}) => (
       <div className="draws__jackpot-title">Jackpot</div>
       <div className="draws__jackpot-container">
         <div className="draws__jackpot-number">
-          {Math.floor(parseFloat(Web3.utils.fromWei(jackpot)) * 100) / 100} {process.env.NEXT_PUBLIC_CURRENCY_NAME}
+          {formatMoney(jackpot)} {process.env.NEXT_PUBLIC_CURRENCY_NAME}
         </div>
       </div>
     </div>
@@ -73,9 +84,18 @@ Card.NoWin = () => (
   </div>
 );
 
-Card.Prize = () => (
+Card.Prize = ({matches, prize}) => (
   <div className="prize">
     <div className="prize__title">You Won!</div>
+    {prize !== null ? (
+      <div className="prize__count">
+        <div className="prize__count-text">Prize: {formatMoney(prize)}
+          <span className="prize__line prize__line--left"></span>
+          <span className="prize__line prize__line--right"></span>
+        </div>
+      </div>
+    ) : null}
+    <div className="prize__match">Matches: {matches}</div>
   </div>
 );
 

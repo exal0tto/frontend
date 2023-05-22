@@ -57,6 +57,11 @@ export interface Ticket {
   numbers: number[];
 }
 
+export interface TicketExtended extends Ticket {
+  prize: string;
+  withdrawn: boolean;
+}
+
 
 export class Lottery {
   public static readonly ABI: AbiItem[] = LotteryABI.abi as AbiItem[];
@@ -172,6 +177,14 @@ export class Lottery {
     };
   }
 
+  public async getExtendedTicket(ticket: Ticket): Promise<TicketExtended> {
+    const result: TicketExtended = {...ticket};
+    const {prize, withdrawn} = await this._contract.methods.getTicketPrize(ticket.id).call();
+    result.prize = prize;
+    result.withdrawn = withdrawn;
+    return result;
+  }
+
   private static _sanitizeRoundNumber(currentRound: number, round?: number): number {
     if (!round && round !== 0) {
       round = currentRound;
@@ -189,8 +202,6 @@ export class Lottery {
     const currentRound = await this.getCurrentRound();
     return Lottery._sanitizeRoundNumber(currentRound, round);
   }
-
-  // TODO
 
   public async getTimeOfNextDraw(): Promise<Date> {
     const nextDrawTime = await this._contract.methods.getNextDrawTime().call();
@@ -255,5 +266,7 @@ export class Lottery {
     return result;
   }
 
-  // TODO
+  public async withdrawPrize(ticketId: number, account?: string): Promise<void> {
+    return await this._contract.methods.withdrawPrize(ticketId).send({from: account});
+  }
 }

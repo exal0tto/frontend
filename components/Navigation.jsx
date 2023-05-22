@@ -89,7 +89,7 @@ export const DropdownNavigationMenu = () => {
   return (
     <MenuDropdown type="menu" text={findCurrentCaption(router.pathname)}>
       {navigationMenuItems
-          .filter(({visible}) => visible === 'always' || (visible === 'account' && account))
+          .filter(({visible}) => visible === 'always' || (account && visible === 'account'))
           .map(({caption, target}, index) => (
             <MenuDropdown.Item key={index} text={caption} target={target}/>
           ))
