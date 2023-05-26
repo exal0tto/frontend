@@ -40,6 +40,11 @@ const Ticket = ({lottery, ticket}) => {
         actionTitle={withdrawn ? "Withdrawn" : "Withdraw"}
         actionEnabled={!withdrawn}
     >
+      {ticket.txHash ? (
+        <Card.Section title="Transaction">
+          <a href={`https://${process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS}/tx/${ticket.txHash}`} target="_blank" rel="noreferrer">{ticket.txHash}</a>
+        </Card.Section>
+      ) : null}
       <Card.Numbers
           title="Your Numbers"
           numbers={ticket.numbers}

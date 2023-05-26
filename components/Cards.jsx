@@ -55,6 +55,16 @@ Card.Jackpot = ({jackpot}) => (
 );
 
 
+Card.Section = ({title, children}) => (
+  <div className="my-numbers__out">
+    <div className="my-numbers">
+      <div className="my-numbers__title">{title}</div>
+      <div className="my-numbers__body">{children}</div>
+    </div>
+  </div>
+);
+
+
 Card.Numbers = ({title, numbers, highlightedNumbers}) => (
   <div className="my-numbers__out">
     <div className="my-numbers">

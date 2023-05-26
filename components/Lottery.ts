@@ -50,6 +50,8 @@ export interface DrawExtended extends Draw {
 
 export interface Ticket {
   id: number;
+  blockNumber: number;
+  txHash?: string;
   date: Date;
   round: number;
   draw: Draw | null;
@@ -157,7 +159,7 @@ export class Lottery {
       numbers: string[],
     } = await this._contract.methods.getTicket(id).call();
     const parsedRound = parseInt(round, 10);
-    const [draw, timestamp] = await Promise.all([
+    const [draw, timestamp, logs, logs6] = await Promise.all([
       (async () => {
         const currentRound = await this.getCurrentRound();
         return parsedRound < currentRound ? await this.getDrawData(parsedRound) : null;
@@ -166,20 +168,37 @@ export class Lottery {
         const {timestamp} = await this._web3.eth.getBlock(blockNumber);
         return timestamp;
       })(),
+      this._contract.getPastEvents('Ticket', {
+        filter: {round, id},
+        fromBlock: blockNumber,
+        toBlock: blockNumber,
+      }),
+      this._contract.getPastEvents('Ticket6', {
+        filter: {round, id},
+        fromBlock: blockNumber,
+        toBlock: blockNumber,
+      }),
     ]);
-    return {
+    const result = {
       id: id,
+      blockNumber: parseInt(blockNumber, 10),
       date: new Date(parseInt('' + timestamp, 10) * 1000),
       round: parsedRound,
       draw: draw,
       player: player,
       numbers: numbers.map(number => parseInt(number, 10)),
     };
+    if (logs.length > 0) {
+      result.txHash = logs[0].transactionHash;
+    } else if (logs6.length > 0) {
+      result.txHash = logs6[0].transactionHash;
+    }
+    return result;
   }
 
   public async getExtendedTicket(ticket: Ticket): Promise<TicketExtended> {
-    const result: TicketExtended = {...ticket};
     const {prize, withdrawn} = await this._contract.methods.getTicketPrize(ticket.id).call();
+    const result: TicketExtended = {...ticket};
     result.prize = prize;
     result.withdrawn = withdrawn;
     return result;
