@@ -17,11 +17,12 @@ export const LotteryContextProvider = ({children}) => {
       setLottery(new Lottery({
         web3: context.library,
         address: process.env.NEXT_PUBLIC_LOTTERY_ADDRESS,
+        defaultSigner: context.account,
       }));
     } else {
       setLottery(null);
     }
-  }, [context, context.active, context.library]);
+  }, [context, context.active, context.library, context.account]);
   return (
     <LotteryContext.Provider value={{context, lottery}}>
       {children}

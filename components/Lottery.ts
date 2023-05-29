@@ -12,6 +12,7 @@ export interface Options {
   web3?: Web3;
   provider?: provider;
   address: string;
+  defaultSigner?: string;
 }
 
 
@@ -74,6 +75,7 @@ export class Lottery {
   private readonly _address: string;
   private readonly _web3: Web3;
   private readonly _contract: Contract;
+  private readonly _defaultSigner: string | null;
 
   public constructor(options: Options) {
     if (!options.address) {
@@ -89,6 +91,7 @@ export class Lottery {
       this._web3 = new Web3(options.provider!);
     }
     this._contract = new this._web3.eth.Contract(Lottery.ABI, this._address);
+    this._defaultSigner = options.defaultSigner || null;
   }
 
   public get address(): string {
@@ -97,6 +100,10 @@ export class Lottery {
 
   public get web3(): Web3 {
     return this._web3;
+  }
+
+  public get defaultSigner(): string | null {
+    return this._defaultSigner;
   }
 
   public setProvider(p: provider): void {
@@ -134,10 +141,10 @@ export class Lottery {
     const value = await this._contract.methods.getTicketPrice(numbers).call();
     if (numbers.length > 6) {
       return await this._contract.methods.buyTicket(
-          Lottery.NULL_REFERRAL_CODE, numbers).send({from: account, value});
+          Lottery.NULL_REFERRAL_CODE, numbers).send({from: account || this._defaultSigner, value});
     } else {
       return await this._contract.methods.buyTicket6(
-          Lottery.NULL_REFERRAL_CODE, numbers).send({from: account, value});
+          Lottery.NULL_REFERRAL_CODE, numbers).send({from: account || this._defaultSigner, value});
     }
   }
 
@@ -286,6 +293,8 @@ export class Lottery {
   }
 
   public async withdrawPrize(ticketId: number, account?: string): Promise<void> {
-    return await this._contract.methods.withdrawPrize(ticketId).send({from: account});
+    return await this._contract.methods.withdrawPrize(ticketId).send({
+      from: account || this._defaultSigner,
+    });
   }
 }

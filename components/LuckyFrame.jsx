@@ -186,12 +186,12 @@ const PlayButton = ({numbers, onPlayed}) => {
   }, [lottery]);
 
   useEffect(() => {
-    if (waitingNumbers && context.account && lottery) {
+    if (waitingNumbers && context.account && context.account === lottery.defaultSigner) {
       const numbers = waitingNumbers;
       setWaitingNumbers(null);
       buyTicket(numbers);
     }
-  }, [waitingNumbers, context.account]);
+  }, [waitingNumbers, context.account, lottery?.defaultSigner]);
 
   return (
     <div className="lucky-list__buttons">
