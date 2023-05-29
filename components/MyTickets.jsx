@@ -22,15 +22,15 @@ const Ticket = ({lottery, ticket}) => {
   const {account} = useWeb3React();
   const [prize, setPrize] = useState(null);
   const [withdrawn, setWithdrawn] = useState(false);
-  if (ticket.draw) {
     useEffect(() => {
-      (async () => {
-        const data = await lottery.getExtendedTicket(ticket);
-        setPrize(lottery.web3.utils.toBN(data.prize));
-        setWithdrawn(data.withdrawn);
-      })();
-    }, [lottery, ticket.id]);
-  }
+      if (ticket.draw) {
+        (async () => {
+          const data = await lottery.getExtendedTicket(ticket);
+          setPrize(lottery.web3.utils.toBN(data.prize));
+          setWithdrawn(data.withdrawn);
+        })();
+      }
+    }, [lottery, ticket.draw, ticket.id]);
   return (
     <Card
         date={ticket.date}

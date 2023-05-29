@@ -186,7 +186,7 @@ export class Lottery {
         toBlock: blockNumber,
       }),
     ]);
-    const result = {
+    const result: Ticket = {
       id: id,
       blockNumber: parseInt(blockNumber, 10),
       date: new Date(parseInt('' + timestamp, 10) * 1000),
@@ -205,10 +205,7 @@ export class Lottery {
 
   public async getExtendedTicket(ticket: Ticket): Promise<TicketExtended> {
     const {prize, withdrawn} = await this._contract.methods.getTicketPrize(ticket.id).call();
-    const result: TicketExtended = {...ticket};
-    result.prize = prize;
-    result.withdrawn = withdrawn;
-    return result;
+    return {...ticket, prize, withdrawn};
   }
 
   private static _sanitizeRoundNumber(currentRound: number, round?: number): number {

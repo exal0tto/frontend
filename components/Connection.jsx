@@ -121,10 +121,10 @@ export const WalletModal = () => {
 
 export const ConnectButton = () => {
   const {account} = useWeb3React();
+  const {showModal} = useModals();
   if (account) {
     return null;
   }
-  const {showModal} = useModals();
   return (
     <div className="btn-wallet">
       <button className="btn btn-wallet__main-btn" onClick={() => showModal('wallet')}>
