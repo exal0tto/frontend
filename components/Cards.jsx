@@ -56,25 +56,25 @@ Card.Jackpot = ({jackpot}) => (
 
 
 Card.Section = ({title, children}) => (
-  <div className="my-numbers__out">
-    <div className="my-numbers">
-      <div className="my-numbers__title">{title}</div>
-      <div className="my-numbers__body">{children}</div>
+  <div className="card-section__out">
+    <div className="card-section">
+      <div className="card-section__title">{title}</div>
+      <div className="card-section__body">{children}</div>
     </div>
   </div>
 );
 
 
 Card.Numbers = ({title, numbers, highlightedNumbers}) => (
-  <div className="my-numbers__out">
-    <div className="my-numbers">
-      <div className="my-numbers__title">{title}</div>
-      <div className="my-numbers__body">
+  <div className="card-section__out">
+    <div className="card-section">
+      <div className="card-section__title">{title}</div>
+      <div className="card-section__body">
         {numbers.map((number, index) => {
           const selected = highlightedNumbers?.includes(number);
           return (
-            <div key={index} className={'my-numbers__item' + (selected ? ' my-numbers__item--selected' : '')}>
-              <span className="my-numbers__text">{number}</span>
+            <div key={index} className={'card-section__item' + (selected ? ' card-section__item--selected' : '')}>
+              <div className="card-section__text">{number}</div>
             </div>
           );
         })}

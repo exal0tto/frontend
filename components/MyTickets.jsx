@@ -42,7 +42,9 @@ const Ticket = ({lottery, ticket}) => {
     >
       {ticket.txHash ? (
         <Card.Section title="Transaction">
-          <a href={`https://${process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS}/tx/${ticket.txHash}`} target="_blank" rel="noreferrer">{ticket.txHash}</a>
+          <a href={`https://${process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS}/tx/${ticket.txHash}`} target="_blank" rel="noreferrer">
+            {ticket.txHash.substring(0, 22)}&hellip;
+          </a>
         </Card.Section>
       ) : null}
       <Card.Numbers
