@@ -9,7 +9,7 @@ import {NetworkConnector} from '@web3-react/network-connector';
 import {InjectedConnector} from '@web3-react/injected-connector';
 import {WalletConnectConnector} from '@web3-react/walletconnect-connector';
 
-import {Modal, ModalContext} from '@/components/Modals';
+import {useModals, Modal} from '@/components/Modals';
 
 import metaMaskLogo from '@/images/metamask.png';
 import walletConnectLogo from '@/images/walletconnect.png';
@@ -124,13 +124,12 @@ export const ConnectButton = () => {
   if (account) {
     return null;
   }
+  const {showModal} = useModals();
   return (
     <div className="btn-wallet">
-      <ModalContext.Consumer>{({showModal}) => (
-        <button className="btn btn-wallet__main-btn" onClick={() => showModal('wallet')}>
-          <span className="btn-s__text btn-wallet__text">Connect Wallet</span>
-        </button>
-      )}</ModalContext.Consumer>
+      <button className="btn btn-wallet__main-btn" onClick={() => showModal('wallet')}>
+        <span className="btn-s__text btn-wallet__text">Connect Wallet</span>
+      </button>
       <div className="btn-wallet__doubling">
         <span className="btn-s__frame"></span>
       </div>

@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {useWeb3React} from '@web3-react/core';
 
 import Card from './Cards';
-import {LotteryContext} from './LotteryContext';
+import {useLottery} from './LotteryContext';
 import {SectionTitle} from './SectionTitle';
 
 
@@ -84,15 +84,13 @@ const TicketList = ({lottery, account}) => {
 
 
 export const MyTickets = () => {
-  const {account} = useWeb3React();
+  const {context, lottery} = useLottery();
   return (
     <section className="past-draws">
       <div className="container">
         <SectionTitle title="My Tickets"/>
-        {account ? (
-          <LotteryContext.Consumer>{lottery => (
-            <TicketList lottery={lottery} account={account}/>
-          )}</LotteryContext.Consumer>
+        {context.account ? (
+          <TicketList lottery={lottery} account={context.account}/>
         ) : (
           <article>
             <p className="past-draws__descr">Please connect your wallet.</p>

@@ -4,7 +4,7 @@ import {useWeb3React} from '@web3-react/core';
 import Web3 from 'web3';
 
 import {Dropdown} from '@/components/Dropdowns';
-import {LotteryContext} from '@/components/LotteryContext';
+import {useLottery} from '@/components/LotteryContext';
 import {USDPriceFeed, NonUSDPriceFeed} from '@/components/PriceFeed';
 
 
@@ -154,7 +154,8 @@ const NextDraw = ({lottery}) => {
 };
 
 
-const JackpotInner = ({lottery}) => {
+export const Jackpot = () => {
+  const {lottery} = useLottery();
   const [jackpot, setJackpot] = useState(null);
   useEffect(() => {
     if (lottery) {
@@ -192,10 +193,3 @@ const JackpotInner = ({lottery}) => {
     </div>
   );
 };
-
-
-export const Jackpot = () => (
-  <LotteryContext.Consumer>{lottery => (
-    <JackpotInner lottery={lottery}/>
-  )}</LotteryContext.Consumer>
-);

@@ -1,10 +1,9 @@
 import {useEffect, useState} from 'react';
 
 import Web3 from 'web3';
-import {useWeb3React} from '@web3-react/core';
 
-import {LotteryContext} from './LotteryContext';
-import {ModalContext, Modal} from './Modals';
+import {useLottery} from './LotteryContext';
+import {useModals, Modal} from './Modals';
 import {range, COMBINATIONS} from './Utilities';
 
 
@@ -104,7 +103,8 @@ const NumberList = ({numbers, splice, onAddNumber}) => (
 );
 
 
-const NumberStats = ({lottery, numbers}) => {
+const NumberStats = ({numbers}) => {
+  const {lottery} = useLottery();
   const [price, setPrice] = useState(null);
   useEffect(() => {
     (async () => {
@@ -152,10 +152,25 @@ const MONTHS = [
 ];
 
 
-const PlayButton = ({lottery, numbers, onPlayed}) => {
-  const context = useWeb3React();
+const PlayButton = ({numbers, onPlayed}) => {
+  const {context, lottery} = useLottery();
+  const {showModal} = useModals();
 
   const [nextDraw, setNextDraw] = useState(null);
+  const [waitingNumbers, setWaitingNumbers] = useState(null);
+
+  const buyTicket = async numbers => {
+    let receipt;
+    try {
+      receipt = await lottery.buyTicket(numbers, context.account);
+    } catch (e) {
+      console.error(e);
+      showModal('message', 'Error', e.message || e.toString());
+      return;
+    }
+    onPlayed();
+    showModal('receipt', numbers, receipt);
+  };
 
   useEffect(() => {
     const updateTime = async () => {
@@ -170,47 +185,42 @@ const PlayButton = ({lottery, numbers, onPlayed}) => {
     };
   }, [lottery]);
 
+  useEffect(() => {
+    if (waitingNumbers && context.account && lottery) {
+      const numbers = waitingNumbers;
+      setWaitingNumbers(null);
+      buyTicket(numbers);
+    }
+  }, [waitingNumbers, context.account]);
+
   return (
-    <ModalContext.Consumer>{({showModal}) => (
-      <div className="lucky-list__buttons">
-        <button className="btn-s btn-play" onClick={async () => {
-          if (numbers.length < 6) {
-            showModal('message', 'Play', 'Please select at least 6 numbers.');
-            return;
-          }
-          if (!context.account) {
-            try {
-              await showModal('wallet');
-            } catch {
-              return;
-            }
-          }
-          let receipt;
-          try {
-            receipt = await lottery.buyTicket(numbers, context.account);
-          } catch (e) {
-            console.error(e);
-            showModal('message', 'Error', e.message || e.toString());
-            return;
-          }
-          onPlayed();
-          showModal('receipt', numbers, receipt);
-        }}>
-          <span className="btn-s__frame btn-play__frame">
-            <span className="btn-s__text">Play</span>
-            <span className="btn-play-in btn-s">
-              <span className="btn-play-in__frame btn-s__frame">
-                <span className="btn-play-in__text">
-                  {nextDraw ? (
-                    <>{MONTHS[nextDraw.getMonth()]} <b>{nextDraw.getDate()}</b>, <b>{nextDraw.getFullYear()}</b> Draw</>
-                  ) : ''}
-                </span>
+    <div className="lucky-list__buttons">
+      <button className="btn-s btn-play" onClick={async () => {
+        if (numbers.length < 6) {
+          showModal('message', 'Play', 'Please select at least 6 numbers.');
+          return;
+        }
+        if (context.account) {
+          buyTicket(numbers);
+        } else {
+          setWaitingNumbers(numbers);
+          showModal('wallet');
+        }
+      }}>
+        <span className="btn-s__frame btn-play__frame">
+          <span className="btn-s__text">Play</span>
+          <span className="btn-play-in btn-s">
+            <span className="btn-play-in__frame btn-s__frame">
+              <span className="btn-play-in__text">
+                {nextDraw ? (
+                  <>{MONTHS[nextDraw.getMonth()]} <b>{nextDraw.getDate()}</b>, <b>{nextDraw.getFullYear()}</b> Draw</>
+                ) : ''}
               </span>
             </span>
           </span>
-        </button>
-      </div>
-    )}</ModalContext.Consumer>
+        </span>
+      </button>
+    </div>
   );
 };
 
@@ -218,12 +228,8 @@ const PlayButton = ({lottery, numbers, onPlayed}) => {
 const LuckyList = ({numbers, splice, onAddNumber, onPlayed}) => (
   <div className="lucky-list">
     <NumberList numbers={numbers} splice={splice} onAddNumber={onAddNumber}/>
-    <LotteryContext.Consumer>{lottery => (
-      <>
-        <NumberStats lottery={lottery} numbers={numbers}/>
-        <PlayButton lottery={lottery} numbers={numbers} onPlayed={onPlayed}/>
-      </>
-    )}</LotteryContext.Consumer>
+    <NumberStats numbers={numbers}/>
+    <PlayButton numbers={numbers} onPlayed={onPlayed}/>
   </div>
 );
 

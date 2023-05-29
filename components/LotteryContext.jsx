@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {useWeb3React} from '@web3-react/core';
 
@@ -6,6 +6,8 @@ import {Lottery} from './Lottery';
 
 
 export const LotteryContext = React.createContext(null);
+
+export const useLottery = () => useContext(LotteryContext);
 
 export const LotteryContextProvider = ({children}) => {
   const context = useWeb3React();
@@ -21,7 +23,7 @@ export const LotteryContextProvider = ({children}) => {
     }
   }, [context, context.active, context.library]);
   return (
-    <LotteryContext.Provider value={lottery}>
+    <LotteryContext.Provider value={{context, lottery}}>
       {children}
     </LotteryContext.Provider>
   );

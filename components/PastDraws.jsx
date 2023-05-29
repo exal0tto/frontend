@@ -179,7 +179,7 @@ export const PastDraws = ({lottery}) => (
         </p>
       </article>
       <SectionTitle title="Past Draws"/>
-      <LotteryContext.Consumer>{lottery => lottery ? (
+      <LotteryContext.Consumer>{({lottery}) => lottery ? (
         <DrawList lottery={lottery}/>
       ) : null}</LotteryContext.Consumer>
     </div>

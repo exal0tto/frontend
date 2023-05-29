@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 
 import {Modal as BSModal} from 'react-bootstrap';
 
 
 export const ModalContext = React.createContext(null);
+
+export const useModals = () => useContext(ModalContext);
 
 
 export const ModalContainer = ({children}) => {
