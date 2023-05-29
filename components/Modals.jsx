@@ -8,10 +8,12 @@ export const ModalContext = React.createContext(null);
 
 export const ModalContainer = ({children}) => {
   const [modal, setModal] = useState(null);
+  const [visible, setVisible] = useState(false);
   const showModal = (name, ...params) => new Promise((resolve, reject) => {
     setModal({name, params, resolve, reject});
+    setVisible(true);
   });
-  const hideModal = () => setModal(null);
+  const hideModal = () => setVisible(false);
   return (
     <ModalContext.Provider value={{
       modal,
@@ -19,6 +21,7 @@ export const ModalContainer = ({children}) => {
       params: modal?.params,
       resolve: modal?.resolve,
       reject: modal?.reject,
+      visible,
       showModal,
       hideModal,
     }}>
@@ -31,9 +34,9 @@ export const ModalContainer = ({children}) => {
 export const Modal = ({name, title, children, className, resolveOnHide}) => {
   const [mutableTitle, setMutableTitle] = useState(title);
   return (
-    <ModalContext.Consumer>{({modal, resolve, reject, hideModal}) => (
+    <ModalContext.Consumer>{({modal, resolve, reject, visible, hideModal}) => (
       <BSModal
-          show={modal?.name === name}
+          show={visible && modal?.name === name}
           centered
           dialogClassName={className}
           onHide={() => {

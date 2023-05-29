@@ -170,18 +170,6 @@ const PlayButton = ({lottery, numbers, onPlayed}) => {
     };
   }, [lottery]);
 
-  const playNumbers = async (lottery) => {
-    if (numbers.length < 6) {
-      return null;
-    }
-    try {
-      return await lottery.buyTicket(numbers, context.account);
-    } catch (e) {
-      console.error(e);
-      return null;
-    }
-  };
-
   return (
     <ModalContext.Consumer>{({showModal}) => (
       <div className="lucky-list__buttons">
@@ -197,11 +185,16 @@ const PlayButton = ({lottery, numbers, onPlayed}) => {
               return;
             }
           }
-          const receipt = await playNumbers(lottery);
-          if (receipt) {
-            onPlayed();
-            showModal('receipt', numbers, receipt);
+          let receipt;
+          try {
+            receipt = await lottery.buyTicket(numbers, context.account);
+          } catch (e) {
+            console.error(e);
+            showModal('message', 'Error', e.message || e.toString());
+            return;
           }
+          onPlayed();
+          showModal('receipt', numbers, receipt);
         }}>
           <span className="btn-s__frame btn-play__frame">
             <span className="btn-s__text">Play</span>
